@@ -1,0 +1,53 @@
+{
+    "entries": [
+        {
+            "title": "Dog Days...",
+            "date": "10-29-2018",
+            "time_spent": 2,
+            "notes": "Building out full projects for free while you're learning really takes its toll.",
+            "resources": "http://example.com,http://google.com,http://mozilla.mdn.com"
+        },
+        {
+            "title": "First day on the job!",
+            "date": "10-29-2018",
+            "time_spent": 8,
+            "notes": "This is amazing! Never thought I'd get here!",
+            "resources": "http://example.com,http://google.com,http://mozilla.mdn.com"
+        },
+        {
+            "title": "Built a menu library",
+            "date": "10-29-2018",
+            "time_spent": 20,
+            "notes": "This text is the hardest part to write.",
+            "resources": "http://example.com,http://google.com,http://mozilla.mdn.com"
+        },
+        {
+            "title": "I've got to learn Go",
+            "date": "10-29-2018",
+            "time_spent": 17,
+            "notes": "Writing Go is an exercise in best practices.",
+            "resources": "http://example.com,http://google.com,http://mozilla.mdn.com"
+        },
+        {
+            "title": "Cleaning up my PR's",
+            "date": "10-29-2018",
+            "time_spent": 6,
+            "notes": "Each commit has to communicate something to another developer, both in scope and in name.",
+            "resources": "http://example.com,http://google.com,http://mozilla.mdn.com"
+        },
+        {
+            "title": "Communicating to marketing",
+            "date": "10-29-2018",
+            "time_spent": 3,
+            "notes": "They understand more than you think, but are to easy to gloss over what they don't know. Ask lots of clarifying questions.",
+            "resources": "http://example.com,http://google.com,http://mozilla.mdn.com"
+        },
+        {
+            "title": "Taking time for myself",
+            "date": "10-29-2018",
+            "time_spent": 24,
+            "notes": "This is nonsense, I'm taking a sabatical.",
+            "resources": "http://example.com,http://google.com,http://mozilla.mdn.com"
+        }
+    ]
+}
