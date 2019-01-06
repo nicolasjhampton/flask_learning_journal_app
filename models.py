@@ -4,6 +4,7 @@ import json
 from io import StringIO
 
 from peewee import *
+from playhouse.shortcuts import model_to_dict
 from flask import g
 
 
@@ -29,38 +30,25 @@ class Entry(Model):
     class Meta:
         database = db
 
-# / /entries /entries/<slug> /entries/edit/<slug> /entries/delete/<slug> /entry
-
-def to_dictionary(func):
-    @wraps(func)
-    def inner(**kwargs):
-        return func(**kwargs).dicts()
-    return inner
-
 # /entries
-@to_dictionary
 def ALL_ENTRIES():
-    pass
+    return Entry.select()
 
 # /entries/<slug>
-@to_dictionary
-def GET_ENTRY(**kwargs):
-    pass
+def GET_ENTRY(entry_id):
+    return Entry.get_by_id(entry_id)
 
 # /entries/edit/<slug>
-@to_dictionary
-def EDIT_ENTRY(**kwargs):
-    pass
+def EDIT_ENTRY(entry_id, **kwargs):
+    Entry.set_by_id(entry_id, kwargs)
 
 # /entries/delete/<slug>
-@to_dictionary
-def DELETE_ENTRY(**kwargs):
-    pass
+def DELETE_ENTRY(entry_id):
+    Entry.delete_by_id(entry_id)
 
 # /entry
-@to_dictionary
 def NEW_ENTRY(**kwargs):
-    pass
+    Entry.create(**kwargs)
 
 def seed():
     entries = None
@@ -96,35 +84,35 @@ class EntryTests(unittest.TestCase):
 
     def test_ALL_ENTRIES(self):
         entries = ALL_ENTRIES()
-        self.assertCountEqual(entries, self.seed_data)
+        self.assertEqual(len(entries), len(self.seed_data))
 
     def test_GET_ENTRY(self):
-        entry1 = Entry.get(Entry.title == self.seed_data[3].title)[0]
-        entry2 = GET_ENTRY(id=entry1.id)
-        for key, value in entry2.items():
-            self.assertEqual(value, self.seed_data[3][key])
+        entry1 = Entry.get(Entry.title == self.seed_data[3]['title'])
+        entry2 = GET_ENTRY(entry1.id)
+        for key, value in self.seed_data[3].items():
+            self.assertEqual(value, getattr(entry2, key))
 
     def test_EDIT_ENTRY(self):
-        entry1 = Entry.get(Entry.title == self.seed_data[2].title)[0]
-        EDIT_ENTRY(id=entry1.id, time_spent=72)
-        entry2 = Entry.get(Entry.title == self.seed_data[2].title)[0].dicts()
-        self.assertNotEqual(entry1, entry2['time_spent'])
-        self.assertEqual(entry2['time_spent'], 72)
-        for key, value in entry2.items():
+        entry1 = Entry.get(Entry.title == self.seed_data[2]['title'])
+        EDIT_ENTRY(entry1.id, time_spent=72)
+        entry2 = Entry.get(Entry.title == self.seed_data[2]['title'])
+        self.assertNotEqual(entry1, entry2.time_spent)
+        self.assertEqual(entry2.time_spent, 72)
+        for key, value in self.seed_data[2].items():
             if key != "time_spent":
-                self.assertEqual(value, entry1[key])
-        pass
+                self.assertEqual(getattr(entry2, key), getattr(entry1, key))
+                self.assertEqual(getattr(entry2, key), value)
 
     def test_DELETE_ENTRY(self):
-        DELETE_ENTRY(id=3)
+        DELETE_ENTRY(3)
         with self.assertRaises(DoesNotExist):
             entry = Entry.get_by_id(3)
 
     def test_NEW_ENTRY(self):
         NEW_ENTRY(**self.sample_entry)
-        entry = Entry.get(Entry.title == self.sample_entry.get('title')).dicts()
-        for key, value in entry.items():
-            self.assertEqual(value, self.sample_entry.get(key))
+        entry = Entry.get(Entry.title == self.sample_entry.get('title'))
+        for key, value in self.sample_entry.items():
+            self.assertEqual(value, getattr(entry, key))
 
 
 if __name__ == "__main__":
