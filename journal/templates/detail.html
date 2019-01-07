@@ -1,0 +1,31 @@
+{% extends "layout.html" %}
+{% block title %}{{ entry.title }} | {{ super() }}{% endblock %}
+{% block content %}
+    <div class="container">
+        <div class="entry-list single">
+            <article>
+                <h1>{{ entry.title }}</h1>
+                <time datetime="{{ entry.date }}">{{ entry.date }}</time>
+                <div class="entry">
+                    <h3>Time Spent: </h3>
+                    <p>{{ entry.time_spent }} Hours</p>
+                </div>
+                <div class="entry">
+                    <h3>What I Learned:</h3>
+                    <p>{{ entry.notes }}</p>
+                </div>
+                <div class="entry">
+                    <h3>Resources to Remember:</h3>
+                    <ul>
+                        {% for resource in entry.resources.split(',') %}
+                        <li><a href="{{ resource }}">{{ resource }}</a></li>
+                        {% endfor %}
+                    </ul>
+                </div>
+            </article>
+        </div>
+    </div>
+    <div class="edit">
+        <p><a href="/entries/edit/{{ entry.id }}.html">Edit Entry</a></p>
+    </div>
+{% endblock %}

@@ -1,70 +1,13 @@
 import unittest
-import datetime
-import json
-from io import StringIO
 
 from peewee import *
-from playhouse.shortcuts import model_to_dict
-from flask import g
 
-
-from functools import wraps
-
-db = None
-
-if __name__ == "__main__":
-    db = SqliteDatabase(':memory:')
-else:
-    db = SqliteDatabase('journal.sqlite3')
-    # adds database connection to flask global namespace
-    g.db = db
-
-class Entry(Model):
-    #Title, Date, Time Spent, What You Learned, Resources to Remember
-    title = CharField(unique=True)
-    date = DateField(default=datetime.date.today(), formats='%m-%d-%Y')
-    time_spent = TimeField()
-    notes = TextField()
-    resources = TextField()
-
-    class Meta:
-        database = db
-
-# /entries
-def ALL_ENTRIES():
-    return Entry.select()
-
-# /entries/<slug>
-def GET_ENTRY(entry_id):
-    return Entry.get_by_id(entry_id)
-
-# /entries/edit/<slug>
-def EDIT_ENTRY(entry_id, **kwargs):
-    Entry.set_by_id(entry_id, kwargs)
-
-# /entries/delete/<slug>
-def DELETE_ENTRY(entry_id):
-    Entry.delete_by_id(entry_id)
-
-# /entry
-def NEW_ENTRY(**kwargs):
-    Entry.create(**kwargs)
-
-def seed():
-    entries = None
-    with open('entries.json', 'r') as raw_entries:
-        data = json.load(raw_entries)
-        entries = data.get('entries')
-        for entry in entries:
-            Entry.create(**entry)
-    return entries
-
-def initialize():
-    db.connect()
-    db.create_tables([Entry], safe=True)
+from journal.models import *
 
 
 class EntryTests(unittest.TestCase):
+    db = SqliteDatabase(":memory:")
+
     sample_entry = {
         "title": "Sample Entry",
         "date": "1-2-2019",
@@ -72,15 +15,14 @@ class EntryTests(unittest.TestCase):
         "notes": "This is a test entry.",
         "resources": "http://testing.com,http://testing.org,http://testing.gov"
     }
+
     seed_data = None
 
     def setUp(self):
-        db.connect()
-        db.create_tables([Entry], safe=True)
-        self.seed_data = seed()
+        _, self.seed_data = initialize(database=self.db, seed_db=True)
 
     def tearDown(self):
-        db.close()
+        self.db.close()
 
     def test_ALL_ENTRIES(self):
         entries = ALL_ENTRIES()
@@ -106,7 +48,7 @@ class EntryTests(unittest.TestCase):
     def test_DELETE_ENTRY(self):
         DELETE_ENTRY(3)
         with self.assertRaises(DoesNotExist):
-            entry = Entry.get_by_id(3)
+            Entry.get_by_id(3)
 
     def test_NEW_ENTRY(self):
         NEW_ENTRY(**self.sample_entry)

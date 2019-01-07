@@ -1,0 +1,14 @@
+{% extends "layout.html" %}
+{% block title %} Entries | {{ super() }}{% endblock %}
+{% block content %}
+<div class="container">
+    <div class="entry-list">
+        {% for entry in entries %}
+        <article>
+            <h2><a href="/entries/{{ entry.id }}">{{ entry.title }}</a></h2>
+            <time datetime="{{ entry.date }}">{{ entry.date }}</time>
+        </article>
+        {% endfor %}
+    </div>
+</div>
+{% endblock %}
