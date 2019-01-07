@@ -11,10 +11,10 @@ db = SqliteDatabase('journal.sqlite3')
 
 class Entry(Model):
     title = CharField(unique=True)
-    date = DateField(default=datetime.date.today(), formats='%m-%d-%Y')
-    time_spent = TimeField()
+    date = DateField(default=datetime.date.today, formats='%m-%d-%Y')
+    time_spent = IntegerField()
     notes = TextField()
-    resources = TextField()
+    resources = CharField()
 
     class Meta:
         database = db
