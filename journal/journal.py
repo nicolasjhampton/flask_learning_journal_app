@@ -2,7 +2,7 @@
 
 from flask import Flask, render_template, g, redirect, url_for, flash
 from peewee import SqliteDatabase
-from .models import initialize, ALL_ENTRIES, GET_ENTRY, NEW_ENTRY, DELETE_ENTRY
+from .models import initialize, ALL_ENTRIES, GET_ENTRY, NEW_ENTRY, DELETE_ENTRY, EDIT_ENTRY
 from .forms import EntryForm
 
 app = Flask(__name__)
@@ -14,16 +14,22 @@ HOST = "0.0.0.0"
 app.config.from_object(__name__)
 app.config.update(dict(
     DATABASE='journal.sqlite3',
-    SEED_DB=False,
-    SECRET_KEY="shh...it's a secret!"
+    SEED_DB=True,
+    SECRET_KEY="shh...it's a secret!",
+    KEEP_OPEN=False
 ))
 
+db = None
+
+def init_db():
+    global db
+    db = SqliteDatabase(app.config['DATABASE'])
 
 @app.before_request
 def before_request():
     """Connect to database"""
     g.db ,_ = initialize(
-        database=SqliteDatabase(app.config['DATABASE']),
+        database=db,
         seed_db=app.config['SEED_DB']
     )
 
@@ -47,9 +53,36 @@ def details(slug=None):
     entry = GET_ENTRY(entry_id=slug)
     return render_template('detail.html', entry=entry)
 
-@app.route("/entries/edit/<slug>")
-def edit():
-    pass
+@app.route("/entries/edit/<slug>", methods=('GET', 'POST'))
+def edit(slug=None):
+    form = EntryForm(
+        # title=entry.title,
+        # date=entry.date,
+        # time_spent=int(entry.time_spent),
+        # notes=entry.notes,
+        # resources=entry.resources.split(','),
+    )
+    if form.validate_on_submit():
+        flash("Update Successful!", "success")
+        resources = ",".join([f.data for f in form.resources.entries])
+        EDIT_ENTRY(
+            entry_id=slug,
+            title=form.title.data,
+            date=form.date.data,
+            time_spent=int(form.time_spent.data),
+            notes=form.notes.data,
+            resources=resources,
+        )
+        return redirect("/entries/" + slug)
+    entry = GET_ENTRY(entry_id=slug)
+    form = EntryForm(
+        title=entry.title,
+        date=entry.date,
+        time_spent=int(entry.time_spent),
+        notes=entry.notes,
+        resources=entry.resources.split(','),
+    )
+    return render_template('edit.html', form=form, entry=entry, getattr=getattr, str=str)
 
 @app.route("/entries/delete/<slug>")
 def delete(slug=None):
@@ -74,6 +107,7 @@ def add():
     
 
 def run():
+    init_db()
     initialize()
     app.run(debug=DEBUG, port=PORT, host=HOST)
 

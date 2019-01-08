@@ -34,21 +34,21 @@ def date_format(form, field):
 
 class EntryForm(FlaskForm):
     title = StringField(
-        'Title',
+        'title',
         validators=[
             DataRequired(),
             title_unique
         ]
     )
     date = StringField(
-        'Date',
+        'date',
         validators=[
             DataRequired(),
             date_format, 
         ]
     )
     time_spent = IntegerField(
-        'Time Spent',
+        'time_spent',
         validators=[
             DataRequired()
         ]
@@ -61,11 +61,10 @@ class EntryForm(FlaskForm):
     )
     resources = FieldList(
         StringField(
-            'URL', 
+            'url', 
             validators=[
-                URL()
+                DataRequired()
             ],
         ),
-        min_entries=1,
-        max_entries=7
+        min_entries=1
     )
