@@ -55,13 +55,7 @@ def details(slug=None):
 
 @app.route("/entries/edit/<slug>", methods=('GET', 'POST'))
 def edit(slug=None):
-    form = EntryForm(
-        # title=entry.title,
-        # date=entry.date,
-        # time_spent=int(entry.time_spent),
-        # notes=entry.notes,
-        # resources=entry.resources.split(','),
-    )
+    form = EntryForm()
     if form.validate_on_submit():
         flash("Update Successful!", "success")
         resources = ",".join([f.data for f in form.resources.entries])
