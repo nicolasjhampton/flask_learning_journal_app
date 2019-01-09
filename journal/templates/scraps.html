@@ -8,3 +8,12 @@
             <textarea id="what-i-learned" rows="5" name="whatILearned"></textarea>
             <label for="resources-to-remember">Resources to Remember</label>
             <textarea id="resources-to-remember" rows="5" name="ResourcesToRemember"></textarea>
+
+
+<!-- {% if field.name in ['title', 'date', 'time_spent', 'notes', 'resources']%}
+            {% with value = getattr(entry, str(field.name)) %}
+            {{ render_field(field, value) }}
+            {% endwith %}
+            {% else %}
+            {{ render_field(field) }}
+            {% endif %} -->

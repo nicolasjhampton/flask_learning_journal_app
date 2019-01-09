@@ -3,22 +3,17 @@
 {% block title %} New Entry | {{ super() }}{% endblock %}
 {% block content %}
 <div class="container">
-    <div class="new-entry">
-        <h2>New Entry</h2>
-        <form method="POST" action="/entries/edit/{{ entry.id }}">
+    <div class="edit-entry">
+        <h2>Edit Entry</h2>
+        <form method="POST" action="/entries/edit/{{ id }}">
             {{ form.hidden_tag() }}
             {% for field in form %}
-            {% if field.name in ['title', 'date', 'time_spent', 'notes', 'resources']%}
-            {% with value = getattr(entry, str(field.name)) %}
-            {{ render_field(field, value) }}
-            {% endwith %}
-            {% else %}
             {{ render_field(field) }}
-            {% endif %}
             {% endfor %}
             <input type="submit" value="Publish Entry" class="button">
-            <a href="/entry" class="button button-secondary">Cancel</a>
+            <a href="/entries/edit/{{ id }}" class="button button-secondary">Cancel</a>
         </form>
     </div>
 </div>
 {% endblock %}
+q

@@ -5,6 +5,43 @@
             <div class="notification error">{{ error }}</div>
         {% endfor %}
     {% endif %}
-    {{ field(placeholder=field.label.text, value=value) }}
+    {{ field(placeholder=field.label.text, value=field.data) }}
+    {% if field.name =='resources' %}
+    <div class="field">
+        <button id="add" class="button">add resource</button>
+        <button id="remove" class="button">remove resource</button>
+    </div>
+    <script>
+        const addButton = document.getElementById('add');
+        const removeButton = document.getElementById('remove');
+        function createInput(number) {
+            const li = document.createElement('li')
+            const label = document.createElement('label')
+            const input = document.createElement('input')
+            label.setAttribute('label', `resources-${number}`)
+            label.innerText = 'url'
+            input.setAttribute('id', `resources-${number}`)
+            input.setAttribute('name', `resources-${number}`)
+            input.setAttribute('required', "")
+            input.setAttribute('type', "text")
+            input.setAttribute('value', `http://example.com`)
+            li.appendChild(label)
+            li.appendChild(input)
+            document.getElementById('resources').appendChild(li)
+        }
+        addButton.addEventListener('click', function(e) {
+            e.preventDefault()
+            const resources = document.getElementById('resources');
+            const resourcesLength = resources.children.length;
+            createInput(resourcesLength)
+        })
+        removeButton.addEventListener('click', function(e) {
+            e.preventDefault()
+            document.getElementById('resources').lastChild.remove()
+        })
+    </script>
+{% endif %}
 </div>
+
+
 {% endmacro %}

@@ -1,6 +1,6 @@
 #!/usr/bin/env python3
 
-from flask import Flask, render_template, g, redirect, url_for, flash
+from flask import Flask, render_template, g, redirect, url_for, flash, request
 from peewee import SqliteDatabase
 from .models import initialize, ALL_ENTRIES, GET_ENTRY, NEW_ENTRY, DELETE_ENTRY, EDIT_ENTRY
 from .forms import EntryForm
@@ -68,15 +68,16 @@ def edit(slug=None):
             resources=resources,
         )
         return redirect("/entries/" + slug)
-    entry = GET_ENTRY(entry_id=slug)
-    form = EntryForm(
-        title=entry.title,
-        date=entry.date,
-        time_spent=int(entry.time_spent),
-        notes=entry.notes,
-        resources=entry.resources.split(','),
-    )
-    return render_template('edit.html', form=form, entry=entry, getattr=getattr, str=str)
+    if request.method == 'GET':
+        entry = GET_ENTRY(entry_id=slug)
+        form = EntryForm(
+            title=entry.title,
+            date=entry.date,
+            time_spent=int(entry.time_spent),
+            notes=entry.notes,
+            resources=entry.resources.split(','),
+        )
+    return render_template('edit.html', form=form, id=slug, getattr=getattr, str=str)
 
 @app.route("/entries/delete/<slug>")
 def delete(slug=None):

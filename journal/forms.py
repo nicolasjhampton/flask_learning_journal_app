@@ -63,7 +63,8 @@ class EntryForm(FlaskForm):
         StringField(
             'url', 
             validators=[
-                DataRequired()
+                DataRequired(),
+                URL()
             ],
         ),
         min_entries=1
