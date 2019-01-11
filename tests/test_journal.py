@@ -14,7 +14,6 @@ class JournalTests(unittest.TestCase):
         journal.app.config['WTF_CSRF_ENABLED'] = False
         journal.app.config['SEED_DB'] = True
         journal.app.testing = True
-        
         journal.init_db()
         journal.db.drop_tables([Entry])
         self.app = journal.app
@@ -50,13 +49,14 @@ class JournalTests(unittest.TestCase):
 
     def test_new_entry(self):
         mock_entry = {
-            'title':"This is a very big title that I should be able to find",
-            'date':"2-18-1984",
-            'time_spent':6,
-            'notes':"I cried some, but overall it was cool",
-            'resources-0':"http://www.google.com",
+            'title': "This is a very big title that I should be able to find",
+            'date': "2-18-1984",
+            'time_spent': 6,
+            'notes': "I cried some, but overall it was cool",
+            'resources-0': "http://www.google.com",
         }
-        self.app.test_client().post('/entry', data=mock_entry, follow_redirects=True)
+        self.app.test_client().post('/entry', data=mock_entry,
+                                    follow_redirects=True)
         journal.db.connect()
         entry = GET_ENTRY(8)
         for key, value in mock_entry.items():
@@ -71,6 +71,7 @@ class JournalTests(unittest.TestCase):
         del mock_entry['resources']
         mock_entry['title'] = "New title"
         mock_entry['resources-0'] = "anything"
-        rv = self.app.test_client().post('/entries/edit/1', data=mock_entry, follow_redirects=True)
+        rv = self.app.test_client().post('/entries/edit/1', data=mock_entry,
+                                         follow_redirects=True)
         journal.db.connect()
         self.assertIn("New title", html.unescape(str(rv.data)))

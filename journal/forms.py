@@ -1,22 +1,19 @@
 import re
 from flask_wtf import FlaskForm
-from wtforms import StringField, PasswordField, TextAreaField, IntegerField, FieldList
+from wtforms import (StringField, PasswordField, TextAreaField,
+                     IntegerField, FieldList)
 from wtforms.validators import (DataRequired, Regexp, NumberRange, URL,
                                 Length, EqualTo, ValidationError, Email)
 
 from .models import Entry
 
 
-def title_unique(form, field):
-    if Entry.select().where(Entry.title == field.data).exists():
-        raise ValidationError('An entry with that title already exists.')
-
 def date_format(form, field):
     date_match = re.fullmatch(
         r'(?P<month>[\d]{1,2})-(?P<day>[\d]{1,2})-(?P<year>[\d]{4,4})',
         field.data
     )
-    if date_match == None:
+    if date_match is None:
         raise ValidationError('Date does not fit format 12-23-2018.')
     try:
         month = int(date_match.group('month'))
@@ -36,15 +33,14 @@ class EntryForm(FlaskForm):
     title = StringField(
         'title',
         validators=[
-            DataRequired(),
-            title_unique
+            DataRequired()
         ]
     )
     date = StringField(
         'date',
         validators=[
             DataRequired(),
-            date_format, 
+            date_format,
         ]
     )
     time_spent = IntegerField(
@@ -61,7 +57,7 @@ class EntryForm(FlaskForm):
     )
     resources = FieldList(
         StringField(
-            'url', 
+            'url',
             validators=[
                 DataRequired(),
                 URL()
