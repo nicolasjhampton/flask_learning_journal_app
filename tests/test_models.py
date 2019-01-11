@@ -37,7 +37,7 @@ class EntryTests(unittest.TestCase):
     def test_EDIT_ENTRY(self):
         entry1 = Entry.get(Entry.title == self.seed_data[2]['title'])
         EDIT_ENTRY(entry1.id, time_spent=72)
-        entry2 = Entry.get(Entry.title == self.seed_data[2]['title'])
+        entry2 = Entry.get(Entry.id == entry1.id)
         self.assertNotEqual(entry1, entry2.time_spent)
         self.assertEqual(entry2.time_spent, 72)
         for key, value in self.seed_data[2].items():
