@@ -31,11 +31,12 @@ db = None
 
 def init_db():
     global db
-    db = db = PostgresqlDatabase(
-        app.config['DATABASE'],
-        user=app.config['USER'],
-        host=app.config['DB_HOST']
-    )
+    db = connect(os.environ.get('DATABASE_URL'))
+    # PostgresqlDatabase(
+    #     app.config['DATABASE'],
+    #     user=app.config['USER'],
+    #     host=app.config['DB_HOST']
+    # )
 
 
 @app.before_request

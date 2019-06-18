@@ -8,11 +8,12 @@ from flask import g
 
 
 # db = SqliteDatabase('journal.sqlite3')
-db = PostgresqlDatabase(
-    os.getenv('DATABASE', 'peewee_diary'),
-    user=os.getenv('USER', 'postgres'),
-    host=os.getenv('DB_HOST', 'localhost'),
-)
+db = connect(os.environ.get('DATABASE_URL'))
+# PostgresqlDatabase(
+#     os.getenv('DATABASE', 'peewee_diary'),
+#     user=os.getenv('USER', 'postgres'),
+#     host=os.getenv('DB_HOST', 'localhost'),
+# )
 
 
 class Entry(Model):
