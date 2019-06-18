@@ -1,7 +1,8 @@
 #!/usr/bin/env python3
 
+import os
 from flask import Flask, render_template, g, redirect, url_for, flash, request
-from peewee import SqliteDatabase
+from peewee import PostgresqlDatabase
 from .models import (initialize, ALL_ENTRIES, GET_ENTRY,
                      NEW_ENTRY, DELETE_ENTRY, EDIT_ENTRY)
 from .forms import EntryForm
@@ -9,23 +10,32 @@ from .forms import EntryForm
 app = Flask(__name__)
 
 DEBUG = True
-PORT = 4000
-HOST = "0.0.0.0"
+PORT = int(os.getenv('PORT', '4000'))
+HOST = os.getenv('HOST', "0.0.0.0")
 
 app.config.from_object(__name__)
 app.config.update(dict(
-    DATABASE='journal.sqlite3',
+    DATABASE=os.getenv('DATABASE', 'peewee_diary'),
+    USER=os.getenv('USER', 'postgres'),
     SEED_DB=True,
-    SECRET_KEY="shh...it's a secret!",
-    KEEP_OPEN=False
+    SECRET_KEY=os.getenv('SECRET', 'shh...it\'s a secret!'),
+    KEEP_OPEN=False,
+    DB_HOST=os.getenv('DB_HOST', 'localhost'),
 ))
+
+
+
 
 db = None
 
 
 def init_db():
     global db
-    db = SqliteDatabase(app.config['DATABASE'])
+    db = db = PostgresqlDatabase(
+        app.config['DATABASE'],
+        user=app.config['USER'],
+        host=app.config['DB_HOST']
+    )
 
 
 @app.before_request

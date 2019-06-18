@@ -1,4 +1,4 @@
-
+import os
 import datetime
 import json
 from io import StringIO
@@ -7,7 +7,12 @@ from peewee import *
 from flask import g
 
 
-db = SqliteDatabase('journal.sqlite3')
+# db = SqliteDatabase('journal.sqlite3')
+db = PostgresqlDatabase(
+    os.getenv('DATABASE', 'peewee_diary'),
+    user=os.getenv('USER', 'postgres'),
+    host=os.getenv('DB_HOST', 'localhost'),
+)
 
 
 class Entry(Model):
