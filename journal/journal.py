@@ -2,7 +2,8 @@
 
 import os
 from flask import Flask, render_template, g, redirect, url_for, flash, request
-from peewee import PostgresqlDatabase, connect
+from peewee import PostgresqlDatabase
+from playhouse.db_url import connect
 from .models import (initialize, ALL_ENTRIES, GET_ENTRY,
                      NEW_ENTRY, DELETE_ENTRY, EDIT_ENTRY)
 from .forms import EntryForm
@@ -31,7 +32,7 @@ db = None
 
 def init_db():
     global db
-    db = connect(os.environ.get('DATABASE_URL'))
+    db = connect(os.getenv('DATABASE_URL','sqlite:///journal.sqlite3'))
     # PostgresqlDatabase(
     #     app.config['DATABASE'],
     #     user=app.config['USER'],

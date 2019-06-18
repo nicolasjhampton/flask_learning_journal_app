@@ -5,10 +5,11 @@ from io import StringIO
 
 from peewee import *
 from flask import g
+from playhouse.db_url import connect
 
 
 # db = SqliteDatabase('journal.sqlite3')
-db = connect(os.environ.get('DATABASE_URL'))
+db = connect(os.getenv('DATABASE_URL','sqlite:///journal.sqlite3'))
 # PostgresqlDatabase(
 #     os.getenv('DATABASE', 'peewee_diary'),
 #     user=os.getenv('USER', 'postgres'),
