@@ -17,10 +17,10 @@ app.config.from_object(__name__)
 app.config.update(dict(
     DATABASE=os.getenv('DATABASE', 'peewee_diary'),
     USER=os.getenv('USER', 'postgres'),
+    DB_HOST=os.getenv('DB_HOST', 'localhost'),
     SEED_DB=True,
     SECRET_KEY=os.getenv('SECRET', 'shh...it\'s a secret!'),
     KEEP_OPEN=False,
-    DB_HOST=os.getenv('DB_HOST', 'localhost'),
 ))
 
 

@@ -12,6 +12,7 @@ flask-login = "*"
 flask-bcrypt = "*"
 pycodestyle = "*"
 psycopg2 = "*"
+gunicorn = "*"
 
 [dev-packages]
 
