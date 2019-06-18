@@ -2,7 +2,7 @@
 
 import os
 from flask import Flask, render_template, g, redirect, url_for, flash, request
-from peewee import PostgresqlDatabase
+from peewee import PostgresqlDatabase, connect
 from .models import (initialize, ALL_ENTRIES, GET_ENTRY,
                      NEW_ENTRY, DELETE_ENTRY, EDIT_ENTRY)
 from .forms import EntryForm
