@@ -123,10 +123,10 @@ def add():
     return render_template('new.html', form=form)
 
 
-def run():
+def run(env, req):
     init_db()
     initialize()
-    app.run(debug=DEBUG, port=PORT, host=HOST)
+    app.run(env, req)
 
 
 if __name__ == "__main__":
